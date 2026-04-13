@@ -66,3 +66,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+include(cmake/stm32-flash-target.cmake)
+add_stm32_flash_target(${CMAKE_PROJECT_NAME})
