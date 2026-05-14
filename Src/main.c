@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "sht_40.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,6 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define SHT40_I2C_ADDR 0x44
 
 /* USER CODE END PD */
 
@@ -46,6 +47,7 @@ I2C_HandleTypeDef hi2c1;
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
+Sht40Handle sht40Handle;
 
 /* USER CODE END PV */
 
@@ -55,6 +57,7 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
+static void SHT40_Init(void);
 
 /* USER CODE END PFP */
 
@@ -96,7 +99,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-
+  SHT40_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -249,6 +252,13 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static void SHT40_Init(void)
+{
+  if (sht40_init(&sht40Handle, &hi2c1, SHT40_I2C_ADDR) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
 
 /* USER CODE END 4 */
 
