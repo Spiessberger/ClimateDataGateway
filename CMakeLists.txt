@@ -45,6 +45,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/sht_40.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/serial_data_transmit.c
 )
 
 # Add include paths
