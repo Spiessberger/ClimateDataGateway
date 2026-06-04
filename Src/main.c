@@ -46,6 +46,8 @@ I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi1;
 
+TIM_HandleTypeDef htim10;
+
 /* USER CODE BEGIN PV */
 Sht40Handle sht40Handle;
 
@@ -56,6 +58,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 static void SHT40_Init(void);
 
@@ -98,8 +101,10 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI1_Init();
   MX_USB_DEVICE_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   SHT40_Init();
+  HAL_TIM_Base_Start_IT(&htim10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -227,6 +232,43 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
+  * @brief TIM10 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM10_Init(void)
+{
+
+  /* USER CODE BEGIN TIM10_Init 0 */
+
+  /* USER CODE END TIM10_Init 0 */
+
+  /* USER CODE BEGIN TIM10_Init 1 */
+
+  // -----------------------------------------
+  // Configure timer to an interval of 1ms
+  // 84 MHz Clock Rate / Prescaler 2 = 42 MHz
+  // 42000 kHz / 42000 = 1 kHz = 1ms period
+  // -----------------------------------------
+  
+  /* USER CODE END TIM10_Init 1 */
+  htim10.Instance = TIM10;
+  htim10.Init.Prescaler = 1;
+  htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim10.Init.Period = 42000;
+  htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM10_Init 2 */
+
+  /* USER CODE END TIM10_Init 2 */
 
 }
 
