@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sht_40.h"
+#include "sht40_polling.h"
 #include "software_timer.h"
 /* USER CODE END Includes */
 
@@ -51,6 +52,7 @@ TIM_HandleTypeDef htim10;
 
 /* USER CODE BEGIN PV */
 Sht40Handle sht40Handle;
+Sht40PollingHandle sht40PollingHandle;
 
 /* USER CODE END PV */
 
@@ -62,6 +64,7 @@ static void MX_SPI1_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 static void SHT40_Init(void);
+static void SHT40_PollingInit(void);
 
 /* USER CODE END PFP */
 
@@ -105,7 +108,10 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   SHT40_Init();
+  SHT40_PollingInit();
   HAL_TIM_Base_Start_IT(&htim10);
+
+  sht40_polling_start(&sht40PollingHandle);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -299,6 +305,14 @@ static void MX_GPIO_Init(void)
 static void SHT40_Init(void)
 {
   if (sht40_init(&sht40Handle, &hi2c1, SHT40_I2C_ADDR) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+static void SHT40_PollingInit(void)
+{
+  if (sht40_polling_init(&sht40PollingHandle, &sht40Handle) != HAL_OK)
   {
     Error_Handler();
   }

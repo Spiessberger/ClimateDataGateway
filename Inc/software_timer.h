@@ -20,8 +20,6 @@ void software_timer_set_callback(SoftwareTimer* timer,
                                  SoftwareTimerCallback callback,
                                  void* userData);
 
-bool software_timer_register(SoftwareTimer* timer);
-
 bool software_timer_start_oneshot(SoftwareTimer* timer, uint32_t periodMs);
 bool software_timer_start_periodic(SoftwareTimer* timer, uint32_t periodMs);
 void software_timer_stop(SoftwareTimer* timer);

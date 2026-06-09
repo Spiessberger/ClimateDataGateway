@@ -15,13 +15,15 @@ void software_timer_init(SoftwareTimer* timer)
     return;
   }
 
-  timer->next = NULL;
   timer->periodMs = 0;
   timer->deadlineMs = 0;
   timer->callback = NULL;
   timer->userData = NULL;
   timer->active = false;
   timer->periodic = false;
+
+  timer->next = TimerListHead;
+  TimerListHead = timer;
 }
 
 void software_timer_set_callback(SoftwareTimer* timer,
@@ -35,21 +37,6 @@ void software_timer_set_callback(SoftwareTimer* timer,
 
   timer->callback = callback;
   timer->userData = userData;
-}
-
-bool software_timer_register(SoftwareTimer* timer)
-{
-  if (timer == NULL)
-  {
-    return false;
-  }
-
-  timer->active = false;
-
-  timer->next = TimerListHead;
-  TimerListHead = timer;
-
-  return true;
 }
 
 bool software_timer_start_oneshot(SoftwareTimer* timer, uint32_t periodMs)

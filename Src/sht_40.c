@@ -25,9 +25,13 @@ HAL_StatusTypeDef sht40_measure(Sht40Handle* handle)
     return HAL_ERROR;
   }
 
-  HAL_I2C_Mem_Write(handle->hi2c, handle->deviceAddress, SHT40_MEASURE_CMD, I2C_MEMADD_SIZE_8BIT, NULL, 0, HAL_MAX_DELAY);
-
-  return HAL_OK;
+  return HAL_I2C_Mem_Write(handle->hi2c,
+                           handle->deviceAddress,
+                           SHT40_MEASURE_CMD,
+                           I2C_MEMADD_SIZE_8BIT,
+                           NULL,
+                           0,
+                           HAL_MAX_DELAY);
 }
 
 HAL_StatusTypeDef sht40_read(Sht40Handle* handle)
@@ -38,22 +42,25 @@ HAL_StatusTypeDef sht40_read(Sht40Handle* handle)
 
   uint8_t data[SHT40_READ_DATA_LENGTH];
 
-  float ret = HAL_I2C_Master_Receive(handle->hi2c, handle->deviceAddress, data, SHT40_READ_DATA_LENGTH, HAL_MAX_DELAY);
+  HAL_StatusTypeDef ret = HAL_I2C_Master_Receive(handle->hi2c, handle->deviceAddress, data, SHT40_READ_DATA_LENGTH, HAL_MAX_DELAY);
   if (ret != HAL_OK) {
     return ret;
   }
 
-  float t_ticks = data[0] * 256 + data[1];
-  float rh_ticks = data[3] * 256 + data[4];
-  handle->temperature = -45.0f + 175.0f * t_ticks / 65535.0f;
-  handle->humidity = -6.0f + 125.0f * rh_ticks / 65535.0f;
+  const float t_ticks = data[0] * 256 + data[1];
+  const float rh_ticks = data[3] * 256 + data[4];
+  const float temperature = -45.0f + 175.0f * t_ticks / 65535.0f;
+  float humidity = -6.0f + 125.0f * rh_ticks / 65535.0f;
 
-  if (handle->humidity < 0.0f) {
-    handle->humidity = 0.0f;
+  if (humidity < 0.0f) {
+    humidity = 0.0f;
   }
-  else if (handle->humidity > 100.0f) {
-    handle->humidity = 100.0f;
+  else if (humidity > 100.0f) {
+    humidity = 100.0f;
   }
+
+  handle->temperature = temperature;
+  handle->humidity = humidity;
 
   return HAL_OK;
 }
