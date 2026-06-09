@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sht_40.h"
+#include "software_timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,6 +115,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    software_timer_process();
   }
   /* USER CODE END 3 */
 }
@@ -299,6 +301,14 @@ static void SHT40_Init(void)
   if (sht40_init(&sht40Handle, &hi2c1, SHT40_I2C_ADDR) != HAL_OK)
   {
     Error_Handler();
+  }
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+{
+  if (htim->Instance == TIM10)
+  {
+    software_timer_tick_1ms();
   }
 }
 
