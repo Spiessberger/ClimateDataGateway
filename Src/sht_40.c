@@ -21,7 +21,8 @@ HAL_StatusTypeDef sht40_init(Sht40Handle* handle, I2C_HandleTypeDef* hi2c, uint1
 
 HAL_StatusTypeDef sht40_measure(Sht40Handle* handle)
 {
-  if (handle == NULL) {
+  if (handle == NULL)
+  {
     return HAL_ERROR;
   }
 
@@ -36,14 +37,16 @@ HAL_StatusTypeDef sht40_measure(Sht40Handle* handle)
 
 HAL_StatusTypeDef sht40_read(Sht40Handle* handle)
 {
-  if (handle == NULL) {
+  if (handle == NULL)
+  {
     return HAL_ERROR;
   }
 
   uint8_t data[SHT40_READ_DATA_LENGTH];
 
   HAL_StatusTypeDef ret = HAL_I2C_Master_Receive(handle->hi2c, handle->deviceAddress, data, SHT40_READ_DATA_LENGTH, HAL_MAX_DELAY);
-  if (ret != HAL_OK) {
+  if (ret != HAL_OK)
+  {
     return ret;
   }
 
@@ -52,10 +55,12 @@ HAL_StatusTypeDef sht40_read(Sht40Handle* handle)
   const float temperature = -45.0f + 175.0f * t_ticks / 65535.0f;
   float humidity = -6.0f + 125.0f * rh_ticks / 65535.0f;
 
-  if (humidity < 0.0f) {
+  if (humidity < 0.0f)
+  {
     humidity = 0.0f;
   }
-  else if (humidity > 100.0f) {
+  else if (humidity > 100.0f)
+  {
     humidity = 100.0f;
   }
 
