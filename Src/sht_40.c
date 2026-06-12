@@ -16,6 +16,7 @@ HAL_StatusTypeDef sht40_init(Sht40Handle* handle, I2C_HandleTypeDef* hi2c, uint1
   handle->deviceAddress = deviceAddress << 1; // Shift left for 7-bit addressing
   handle->temperature = TEMPERATURE_INITIAL_VALUE;
   handle->humidity = HUMIDITY_INITIAL_VALUE;
+  handle->dataReady = false;
   return HAL_OK;
 }
 
@@ -66,13 +67,15 @@ HAL_StatusTypeDef sht40_read(Sht40Handle* handle)
 
   handle->temperature = temperature;
   handle->humidity = humidity;
+  handle->dataReady = true;
 
   return HAL_OK;
 }
 
 HAL_StatusTypeDef sht40_get_temperature(Sht40Handle* handle, float* temperature)
 {
-  if (handle == NULL || temperature == NULL || handle->temperature == TEMPERATURE_INITIAL_VALUE) {
+  if (handle == NULL || temperature == NULL || !handle->dataReady)
+  {
     return HAL_ERROR;
   }
 
@@ -82,7 +85,8 @@ HAL_StatusTypeDef sht40_get_temperature(Sht40Handle* handle, float* temperature)
 
 HAL_StatusTypeDef sht40_get_humidity(Sht40Handle* handle, float* humidity)
 {
-  if (handle == NULL || humidity == NULL || handle->humidity == HUMIDITY_INITIAL_VALUE) {
+  if (handle == NULL || humidity == NULL || !handle->dataReady)
+  {
     return HAL_ERROR;
   }
 

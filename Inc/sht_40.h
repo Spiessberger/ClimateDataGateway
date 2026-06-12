@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "stm32f4xx_hal.h"
 
@@ -9,6 +10,7 @@ typedef struct {
     uint16_t deviceAddress;
     float temperature;
     float humidity;
+    bool dataReady;
 } Sht40Handle;
 
 HAL_StatusTypeDef sht40_init(Sht40Handle* handle, I2C_HandleTypeDef* hi2c, uint16_t deviceAddress);
